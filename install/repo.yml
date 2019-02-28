@@ -1,0 +1,25 @@
+---
+  - name: Install EPEL repo
+    yum:
+      name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+      state: present
+  - name: Install REMI repo
+    yum:
+      name: http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+      state: present
+  - name: Enable REMI-PHP71
+    ini_file:
+      path: /etc/yum.repos.d/remi-php71.repo
+      section: remi-php71
+      option: enabled
+      value: 1
+      backup: no
+  - name: Add Nginx repo
+    yum_repository:
+      name: nginx-stable
+      file: nginx
+      description: nginx stable repo
+      baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+      gpgcheck: 1
+      enabled: 1
+      gpgkey: https://nginx.org/keys/nginx_signing.key

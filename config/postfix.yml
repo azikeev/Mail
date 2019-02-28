@@ -1,0 +1,62 @@
+---
+  - name: Ensure group "postfix" exists
+    group:
+      name: '{{postfix_group}}'
+      gid: 5100
+      state: present
+    tags:
+      - cu
+  - name: Add the user 'postfix' with a specific primary group of 'postfix'
+    user:
+      name: '{{postfix_user}}'
+      uid: 5100
+      group: '{{postfix_group}}'
+      password: '{{postfix_user_password}}'
+      append: yes
+    tags:
+      - cu
+  - name: Create directory structure
+    file:
+      path: '{{item}}'
+      state: directory
+      owner: '{{postfix_user}}'
+      group: '{{postfix_group}}'
+      mode: "u+rwx,g-rwx,o-rwx"
+    with_items: '{{postfix_dirs}}'
+    tags:
+      - cd
+  - name: Create configs from templates
+    template:
+      src: templates/{{item}}.j2
+      dest: '{{postfix_configs_dir}}{{item}}'
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    with_items: '{{postfix_configs}}'
+    tags:
+      - dp
+  - name: Restart Postfix
+    service:
+      name: postfix
+      state: restarted
+    tags:
+      - dd
+  - name: Enable submission
+    lineinfile:
+      dest: '{{postfix_master_cf}}'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      firstmatch: yes
+      backrefs: yes
+    with_items:
+      - { regexp: '^#submission\s+inet(.+)$', line: 'submission inet\1' }
+      - { regexp: '^#\s+-o syslog_name=postfix/submission', line: ' -o syslog_name=postfix/submission' }
+      - { regexp: '^#\s+-o smtpd_tls_security_level=', line: ' -o smtpd_tls_security_level=may' }
+      - { regexp: '^#\s+-o smtpd_sasl_auth_enable=yes', line: ' -o smtpd_sasl_auth_enable=yes' }
+#      - { regexp: '^fs.file-max', line: 'fs.file-max = 65536' }
+
+    tags:
+      - dm
+
+

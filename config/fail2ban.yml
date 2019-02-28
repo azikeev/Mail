@@ -1,0 +1,31 @@
+---
+  - name: Copy jail.conf to jail.local Step #1
+    fetch:
+      src: '{{f2b_conf_src}}'
+      dest: config/templates/jail.conf
+      flat: yes
+    tags:
+      - jail
+  - name: Copy jail.conf to jail.local Step #1
+    copy:
+      dest: '{{f2b_conf_dst}}'
+      src: config/templates/jail.conf
+    tags:
+      - jail
+  - name: Enable fail2ban ssh jail
+    ini_file:
+      path: '{{f2b_conf_dst}}'
+      section: '{{item}}'
+      option: enabled
+      value: true
+      backup: no
+    with_items: '{{enabled_jails}}'
+    tags:
+      - jail
+  - name: Enable Fail2Ban
+    service:
+      name: fail2ban
+      enabled: yes
+      state: restarted
+    tags:
+      - jail

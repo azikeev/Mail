@@ -1,0 +1,46 @@
+## BASIC OPENDKIM CONFIGURATION FILE
+## See opendkim.conf(5) or /usr/share/doc/opendkim/opendkim.conf.sample for more
+
+PidFile	/var/run/opendkim/opendkim.pid
+SignatureAlgorithm      rsa-sha256
+
+Mode	sv
+Syslog	yes
+
+SyslogSuccess	no
+LogWhy	yes
+
+UserID	opendkim:opendkim
+Socket	inet:8891@localhost
+Umask	002
+
+##  This specifies a text file in which to store DKIM transaction statistics.
+##  OpenDKIM must be manually compiled with --enable-stats to enable this feature.
+# Statistics	/var/spool/opendkim/stats.dat
+
+##  Specifies whether or not the filter should generate report mail back
+##  to senders when verification fails and an address for such a purpose
+##  is provided. See opendkim.conf(5) for details.
+SendReports	no
+
+##  Specifies the sending address to be used on From: headers of outgoing
+##  failure reports.  By default, the e-mail address of the user executing
+##  the filter is used (executing_user@hostname).
+# ReportAddress	"Example.com Postmaster" <postmaster@example.com>
+
+SoftwareHeader	yes
+Canonicalization	relaxed/relaxed
+Domain	{{mail_domain}}
+
+Selector	default
+MinimumKeyBits	1024
+
+KeyTable refile:/etc/opendkim/KeyTable
+SigningTable refile:/etc/opendkim/SigningTable
+
+ExternalIgnoreList	refile:/etc/opendkim/TrustedHosts
+InternalHosts	refile:/etc/opendkim/TrustedHosts
+
+OversignHeaders	From
+
+# QueryCache	yes

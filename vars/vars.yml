@@ -1,0 +1,16 @@
+---
+  - name: Load common variables
+    include_vars: common.yml
+    tags: always
+  - name: Load Postfix variables
+    include_vars: postfix.yml
+    tags: always
+  - name: Load Dovecot variables
+    include_vars: dovecot.yml
+    tags: always
+  - name: Load Opendkim variables
+    include_vars: opendkim.yml
+    tags: always
+
+
+

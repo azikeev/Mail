@@ -1,0 +1,6 @@
+dovectot_config: /etc/dovecot/dovecot.conf
+dovectot_auth_config: /etc/dovecot/conf.d/10-auth.conf
+dovectot_auth_pf_config: /etc/dovecot/conf.d/10-auth.conf
+dovectot_ssl_config: /etc/dovecot/conf.d/10-ssl.conf
+dovectot_mail_config: /etc/dovecot/conf.d/10-mail.conf
+dovectot_master_config: /etc/dovecot/conf.d/10-master.conf

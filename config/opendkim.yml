@@ -1,0 +1,62 @@
+---
+  - name: Generate DKIM keys
+    shell: 'opendkim-genkey --restrict --nosubdomains --selector=mail --domain={{mail_domain}} --bits=2048 --directory=/etc/opendkim/keys'
+    tags:
+      - odg
+
+  - name: Configure directory rights
+    file:
+      path: /etc/opendkim/keys
+      state: directory
+      owner: opendkim
+      group: opendkim
+      mode: "u+rwx,g-rwx,o-rwx"
+    tags:
+      - oddr
+  - name: Configure directory rights
+    file:
+      path: '{{item}}'
+      #state: directory
+      owner: opendkim
+      group: opendkim
+      mode: "u+rw-x,g-rwx,o-rwx"
+    with_items:
+      - /etc/opendkim/keys/mail.private
+      - /etc/opendkim/keys/mail.txt
+    tags:
+      - oddr
+
+  - name: Main config
+    template:
+      src: opendkim.conf.j2
+      dest: '{{opendkim_config}}'
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    tags:
+      - odcmc
+
+  - name: Configure KeyTable
+    lineinfile:
+      dest: '{{opendkim_keytable}}'
+      insertafter: 'default.'
+      line: 'mail._domainkey.{{mail_domain}} {{mail_domain}}:mail:/etc/opendkim/keys/mail.private'
+    tags:
+      - dckt
+
+  - name: Configure SigningTable
+    lineinfile:
+      dest: '{{opendkim_signingtable}}'
+      insertafter: '*@example'
+      line: '*@{{mail_domain}} mail._domainkey.{{mail_domain}}'
+    tags:
+      - dcst
+
+  - name: Configure TrustedHosts
+    lineinfile:
+      dest: '{{opendkim_trustedhosts}}'
+      regexp: '#host.exaple'
+      line: '*.{{mail_domain}}'
+    tags:
+      - odth

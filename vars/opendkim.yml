@@ -1,0 +1,4 @@
+opendkim_config: /etc/opendkim.conf
+opendkim_keytable: /etc/opendkim/KeyTable
+opendkim_signingtable: /etc/opendkim/SigningTable
+opendkim_trustedhosts: /etc/opendkim/TrustedHosts

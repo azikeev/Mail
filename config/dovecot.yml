@@ -1,0 +1,72 @@
+---
+  - name: Basic config
+    lineinfile:
+      dest: '{{dovectot_config}}'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      firstmatch: yes
+      backrefs: yes
+    with_items:
+      - { regexp: '^#protocols = ', line: 'protocols = imap lmtp' }
+      - { regexp: '^#listen = ', line: 'listen = *' }
+    tags:
+      - dbc
+
+  - name: Basic auth config
+    lineinfile:
+      dest: '{{dovectot_auth_config}}'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      firstmatch: yes
+      backrefs: yes
+    with_items:
+      - { regexp: 'disable_plaintext_auth =', line: 'disable_plaintext_auth = no' }
+      - { regexp: 'auth_default_realm =', line: 'auth_default_realm = rip.ru.net' }
+      - { regexp: 'auth_mechanisms =', line: 'auth_mechanisms = plain login' }
+      - { regexp: '#!include auth-passwdfile.conf.ext', line: '!include auth-passwdfile.conf.ext' }
+    tags:
+      - dbca
+
+  - name: Mail config
+    lineinfile:
+      dest: '{{dovectot_mail_config}}'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      firstmatch: yes
+      backrefs: yes
+    with_items:
+      - { regexp: '^#mail_location =', line: 'mail_location = maildir:/var/spool/mail/vhosts/%d/%n' }
+      - { regexp: '^#mail_uid =', line: 'mail_uid = 5100' }
+      - { regexp: '^#mail_gid =', line: 'mail_gid = 5100' }
+      - { regexp: '#!include auth-passwdfile.conf.ext', line: '!include auth-passwdfile.conf.ext' }
+    tags:
+      - dcm
+
+  - name: Mail config
+    lineinfile:
+      dest: '{{dovectot_ssl_config}}'
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      firstmatch: yes
+      backrefs: yes
+    with_items:
+      - { regexp: 'ssl_cert =', line: 'ssl_cert = </usr/easyrsa3/pki/issued/mx_server.crt' }
+      - { regexp: 'ssl_key =', line: 'ssl_key = </usr/easyrsa3/pki/private/mx_server.key' }
+      - { regexp: '^#ssl_verify_client_cert =', line: 'ssl_verify_client_cert = no' }
+      - { regexp: '^#ssl_protocols = !SSLv3', line: 'ssl_protocols = !SSLv3' }
+      - { regexp: '^#ssl_cipher_list =', line: 'ssl_cipher_list = ALL:!LOW:!SSLv2:!EXP:!aNULL' }
+    tags:
+      - dcs
+
+  - name: Create MAIN config from templat
+    template:
+      src: templates/dovecot_master.conf.j2
+      dest: '{{dovectot_master_config}}'
+      owner: root
+      group: root
+      mode: 0644
+      backup: yes
+    tags:
+      - dcmc
+
+

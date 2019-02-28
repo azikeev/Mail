@@ -1,0 +1,18 @@
+---
+# centos 7 only !
+- hosts: localhost
+  tasks:
+  - name: Begin
+    debug:
+      msg: Start mail system configuration
+  - name: Load variables
+    import_tasks: vars/vars.yml
+  - name: Load installation tasks
+    import_tasks: install/install.yml
+  - name: Load configuration tasks
+    import_tasks: config/configure.yml
+  - name: Debug
+    debug:
+      msg: Good !
+    tags:
+      - dbg

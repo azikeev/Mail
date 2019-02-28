@@ -1,0 +1,9 @@
+---
+  - name: Install required repositories
+    import_tasks: repo.yml
+  - name: Install packets
+    yum:
+      name: '{{packets_to_install}}'
+      state: latest
+    tags:
+      - install

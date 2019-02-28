@@ -1,0 +1,18 @@
+packets_to_install:
+  - ntpdate
+  - ntp
+  - fail2ban
+  - clamav
+  - dovecot
+  - spamassassin
+  - opendkim
+shell_tasks:
+  - "ntpdate 1.ru.pool.ntp.org"
+f2b_conf_src: /etc/fail2ban/jail.conf
+f2b_conf_dst: /etc/fail2ban/jail.local
+enabled_jails:
+  - sshd
+  - sshd-ddos
+  - postfix
+  - dovecot
+mail_domain: rip.ru.net

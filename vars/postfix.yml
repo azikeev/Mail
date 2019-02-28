@@ -1,0 +1,13 @@
+postfix_group: postfix
+postfix_user: postfix
+postfix_user_password: Bitrix_0112842
+postfix_dirs:
+  - /var/lib/postfix
+  - /var/spool/mail/vhosts
+postfix_main_cf: /etc/postfix/main.cf
+postfix_master_cf: /etc/postfix/master.cf
+postfix_configs_dir: /etc/postfix/
+postfix_configs:
+  - main.cf
+postfix_dbs:
+  - vmailbox

@@ -1,0 +1,36 @@
+---
+  - name: Disable firewalld
+    service:
+      name: firewalld
+      enabled: no
+      state: stopped
+  - name: Install IPTables
+    yum:
+      name: iptables-services
+      state: latest
+  - name: Enable IPTables
+    service:
+      name: iptables
+      enabled: yes
+      state: started
+  - name: Set timezone to Moscow
+    timezone:
+      name: Europe/Moscow
+  - name: Execute shell tasks
+    shell: '{{item}}'
+    with_items: '{{shell_tasks}}'
+    tags:
+      - shell
+  - name: Enable NTPD
+    systemd:
+      name: ntpd
+      state: started
+      enabled: yes
+  - name: Include Fail2ban configuration tasks
+    import_tasks: fail2ban.yml
+  - name: Include Postfix configuration tasks
+    import_tasks: postfix.yml
+  - name: Include OpenDKIM configuration tasks
+    import_tasks: opendkim.yml
+  - name: Include Dovecot configuration tasks
+    import_tasks: dovecot.yml

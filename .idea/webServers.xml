@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="629d6fb4-4331-4f86-9450-5833705ab0ca" name="gate.rip.ru.net" url="http://gate.rip.ru.net">
+        <fileTransfer host="gate.rip.ru.net" port="22" privateKey="C:\Users\azike\.ssh\my.ppk" accessType="SFTP" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
