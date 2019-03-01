@@ -18,7 +18,10 @@
 # Ex 2: A collection of hosts belonging to the 'webservers' group
 [mailservers]
 localhost ansible_connection=local
-## [webservers]
+
+[webservers]
+localhost ansible_connection=local
+
 ## alpha.example.org
 ## beta.example.org
 ## 192.168.1.100
